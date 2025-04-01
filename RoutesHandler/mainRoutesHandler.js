@@ -62,9 +62,13 @@ const postSignup = expressAsyncHandler(async(req,res)=>{
         throw new Error("Fill all the fields");
     }
     else{
-        let existedUser = await User.findOne({email:userEmail});
-        if(existedUser){
-            throw new Error("User already exists");
+        let existedUserMail = await User.findOne({email:userEmail});
+        let existedUserUserName = await User.findOne({name:name});
+        if(existedUserMail){
+            throw new Error("Email Already Registered");
+        }
+        if(existedUserName){
+            throw new Error("UserName Already Exists");
         }
         else{
             let hashedPassword = await bcrypt.hash(password,12);

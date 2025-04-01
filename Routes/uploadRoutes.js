@@ -2,7 +2,7 @@ import express from "express";
 import multer from "multer";
 import cloudinary from "cloudinary";
 import dotenv from "dotenv";
-import jwtAuth from "../middlewares/jwtAuthentication.js";
+import Post from "../schemas/post.js";
 
 dotenv.config();
 const cloudRouter = express.Router();
@@ -35,6 +35,14 @@ cloudRouter.post("/",upload.single("image"), async (req, res) => {
       message: "File uploaded successfully",
       url: result.secure_url,
     });
+    const {userId,caption} = req.body;
+    console.log(`user id is ${userId} and the caption is ${caption}` )
+    const post = await Post.create({userId:userId,caption:caption,imageUrl:result.secure_url});
+
+    if(post){
+      console.log(`Post created by ${userId} successfully`);
+    }
+
     console.log(result.secure_url);
   } catch (error) {
     console.error("Cloudinary Upload Error:", error);
