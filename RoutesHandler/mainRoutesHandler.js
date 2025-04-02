@@ -63,7 +63,7 @@ const postSignup = expressAsyncHandler(async(req,res)=>{
     }
     else{
         let existedUserMail = await User.findOne({email:userEmail});
-        let existedUserUserName = await User.findOne({name:name});
+        let existedUserName = await User.findOne({name:name});
         if(existedUserMail){
             throw new Error("Email Already Registered");
         }

@@ -3,6 +3,7 @@ import multer from "multer";
 import cloudinary from "cloudinary";
 import dotenv from "dotenv";
 import Post from "../schemas/post.js";
+import getters from "../RoutesHandler/uploadRoutesHandler.js";
 
 dotenv.config();
 const cloudRouter = express.Router();
@@ -35,9 +36,9 @@ cloudRouter.post("/",upload.single("image"), async (req, res) => {
       message: "File uploaded successfully",
       url: result.secure_url,
     });
-    const {userId,caption} = req.body;
+    const {userId,caption,tag} = req.body;
     console.log(`user id is ${userId} and the caption is ${caption}` )
-    const post = await Post.create({userId:userId,caption:caption,imageUrl:result.secure_url});
+    const post = await Post.create({userId:userId,caption:caption,imageUrl:result.secure_url,tags:tag});
 
     if(post){
       console.log(`Post created by ${userId} successfully`);
@@ -49,6 +50,9 @@ cloudRouter.post("/",upload.single("image"), async (req, res) => {
     res.status(500).send({ message: "Error uploading to Cloudinary" });
   }
 });
+
+cloudRouter.get("/posts",getters.getPosts);
+cloudRouter.put("/updateLikes",getters.updateLikes);
 
 export default cloudRouter;
 

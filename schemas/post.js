@@ -17,7 +17,7 @@ const postSchema = new mongoose.Schema(
       required: true,
     },
     likes: {
-      type: [mongoose.Schema.Types.ObjectId], 
+      type: [String], 
       default: [],
     },
     comments: [
@@ -37,6 +37,10 @@ const postSchema = new mongoose.Schema(
       type: Date,
       default: Date.now,
     },
+    tags:{
+      type:String,
+      required:true,
+    }
   },
   { timestamps: true }
 );
