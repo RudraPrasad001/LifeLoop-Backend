@@ -53,6 +53,7 @@ cloudRouter.post("/",upload.single("image"), async (req, res) => {
 
 cloudRouter.get("/posts",getters.getPosts);
 cloudRouter.put("/updateLikes",getters.updateLikes);
+cloudRouter.put("/updateComments",getters.postComment);
 
 export default cloudRouter;
 

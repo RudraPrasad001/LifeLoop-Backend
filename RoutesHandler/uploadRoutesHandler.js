@@ -7,6 +7,8 @@ const getPosts = expressAsyncHandler(async (req,res)=>{
 }
 );
 
+
+
 const updateLikes = expressAsyncHandler(async(req,res)=>{
     const {caption,user}=req.body;
     const findPost = await Post.findOne({caption:caption});
@@ -41,4 +43,21 @@ const updateLikes = expressAsyncHandler(async(req,res)=>{
     })
 
 ;
-export default {getPosts,updateLikes};
+
+const postComment = expressAsyncHandler(async(req,res)=>{
+    
+    const {comment,caption,user}=req.body;
+    const findPost = await Post.findOne({caption:caption});
+    console.log("old comments");
+    console.log(findPost.comments);
+    const newCommentBox = {userId:user,text:comment};
+    const newComments = [...findPost.comments,newCommentBox];
+    const ress = await Post.updateOne({caption:caption},{
+        $set:{
+            comments:newComments,
+        }
+    })
+    console.log("Comments updated succesfully")
+    res.json({comments:newComments});
+})
+export default {getPosts,updateLikes,postComment};
