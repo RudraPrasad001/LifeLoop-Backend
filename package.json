@@ -7,9 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon index.js"
   },
-  "author": "",
+  "author": "Rudra",
   "license": "ISC",
-  "description": "",
   "dependencies": {
     "bcrypt": "^5.1.1",
     "cloudinary": "^2.6.0",
@@ -19,8 +18,17 @@
     "express": "^4.21.2",
     "express-async-handler": "^1.2.0",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.13.0",
+    "mongoose": "^8.13.2",
     "multer": "^1.4.5-lts.2",
     "nodemon": "^3.1.9"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RudraPrasad001/LifeLoop-Backend.git"
+  },
+  "bugs": {
+    "url": "https://github.com/RudraPrasad001/LifeLoop-Backend/issues"
+  },
+  "homepage": "https://github.com/RudraPrasad001/LifeLoop-Backend#readme",
+  "description": ""
 }
