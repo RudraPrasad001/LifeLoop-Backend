@@ -20,7 +20,7 @@ const updateLikes = expressAsyncHandler(async(req,res)=>{
          updatedLikes = newLikes;
          await Post.updateOne({caption:caption},{
         $set:{
-            likes:newLikes,
+            likes:newLikes
         }});
     console.log(newLikes)
 
