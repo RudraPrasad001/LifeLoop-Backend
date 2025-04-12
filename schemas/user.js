@@ -8,6 +8,18 @@ const userSchema = mongoose.Schema({
     },
     password:{
         type:String
+    },
+    followers:{
+        type:[String]
+    },
+    following:{
+        type:[String]
+    },
+    outgoingRequest:{
+        type:[String]
+    },
+    incomingRequest:{
+        type:[String]
     }
 },
 {
