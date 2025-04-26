@@ -5,11 +5,11 @@ import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
 dotenv.config();
 const home = (req,res)=>{
-    return res.redirect("http://localhost:5173/");
+    return res.redirect(`${process.env.URL}/`);
 }
 const getLogin = (req,res)=>{
     
-    return res.redirect("http://localhost:5173/login");
+    return res.redirect(`${process.env.URL}/login`);
 };
 const getUsers = expressAsyncHandler(async(req,res)=>{
     const users =await User.find({});
@@ -53,7 +53,7 @@ const postLogin = expressAsyncHandler(async(req,res)=>{
 
 const getSignup = expressAsyncHandler((async (req,res)=>{
     
-    return res.redirect("http://localhost:5173/signup");
+    return res.redirect(`${process.env.URL}/signup`);
 }));
 const postSignup = expressAsyncHandler(async(req,res)=>{
     const {name,userEmail,password} = req.body;
