@@ -10,16 +10,16 @@ const userSchema = mongoose.Schema({
         type:String
     },
     followers:{
-        type:[String]
+        type:Array
     },
     following:{
-        type:[String]
+        type:Array
     },
     outgoingRequest:{
-        type:[String]
+        type:Array
     },
     incomingRequest:{
-        type:[String]
+        type:Array
     }
 },
 {

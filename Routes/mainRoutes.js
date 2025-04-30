@@ -6,4 +6,6 @@ router.get('/',jwtAuth,routes.home);
 router.get('/login',routes.getLogin).post('/login',routes.postLogin);
 router.get('/signup',routes.getSignup).post('/signup',routes.postSignup);
 router.get('/users',routes.getUsers);
+router.get('/user/:id',routes.getUser);
+router.put('/follow',routes.followOrUnfollow);
 export default router;

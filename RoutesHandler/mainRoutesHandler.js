@@ -11,6 +11,46 @@ const getLogin = (req,res)=>{
     
     return res.redirect(`${process.env.URL}/login`);
 };
+const getUser = expressAsyncHandler(async(req,res)=>{
+    const user = await User.find({name:req.params.id});
+    console.log("finding"+ req.params.id);
+    res.json(user);
+})
+
+    const followOrUnfollow = expressAsyncHandler(async (req, res) => {
+    const { follower, followee } = req.body;
+  
+    try {
+      const followerUser = await User.findOne({ name: follower });
+      const followeeUser = await User.findOne({ name: followee });
+  
+      if (!followerUser || !followeeUser) {
+        return res.status(404).json({ error: "User(s) not found" });
+      }
+  
+      const isFollowing = followeeUser.followers.includes(follower);
+  
+      if (isFollowing) {
+        // Unfollow
+        followeeUser.followers = followeeUser.followers.filter(name => name !== follower);
+        followerUser.following = followerUser.following.filter(name => name !== followee);
+      } else {
+        // Follow
+        followeeUser.followers.push(follower);
+        followerUser.following.push(followee);
+      }
+  
+      await followeeUser.save();
+      await followerUser.save();
+  
+      res.json({ message: isFollowing ? "Unfollowed" : "Followed", updatedUser: followeeUser });
+    } catch (error) {
+      res.status(500).json({ error: "Server error" });
+    }
+  });
+  
+
+
 const getUsers = expressAsyncHandler(async(req,res)=>{
     const users =await User.find({});
     console.log(users);
@@ -83,4 +123,4 @@ const postSignup = expressAsyncHandler(async(req,res)=>{
     res.json({message:'post signup page'});
 });
 
-export default {home,postLogin,getSignup,getLogin,postSignup,getUsers};
+export default {home,postLogin,getSignup,getLogin,postSignup,getUsers,getUser,followOrUnfollow};
