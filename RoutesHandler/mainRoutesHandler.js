@@ -56,40 +56,46 @@ const getUsers = expressAsyncHandler(async(req,res)=>{
     console.log(users);
     res.json(users);
 })
-const postLogin = expressAsyncHandler(async(req,res)=>{
-    let {userEmail,password} = req.body;
-    try{
-        if(userEmail.length===0 || password.length===0){
+const postLogin = expressAsyncHandler(async (req, res) => {
+    let { userEmail, password } = req.body;
+    try {
+        if (userEmail.length === 0 || password.length === 0) {
             throw new Error("Fill the fields");
         }
-        const expectedUser =await User.findOne({email:userEmail}).lean();
-        if(expectedUser){
-            let result = await bcrypt.compare(password,expectedUser.password);
-            if(result==true){
+
+        const expectedUser = await User.findOne({ email: userEmail }).lean();
+
+        if (expectedUser) {
+            let result = await bcrypt.compare(password, expectedUser.password);
+            if (result === true) {
                 const expectedUserObj = expectedUser;
                 console.log(expectedUserObj);
-                const token = jwt.sign(expectedUserObj,process.env.SECRET_KEY,{expiresIn:'1h'});
+
+                // Create the JWT token
+                const token = jwt.sign(expectedUserObj, process.env.SECRET_KEY, { expiresIn: '1h' });
                 console.log(token);
-                res.cookie("token",token,{
-                    httpOnly:false,
-                    secure: true,
-                    sameSite: "none",
-                    maxAge: 24 * 60 * 60 * 1000,
+
+                // Set cookie with proper configurations
+                res.cookie("token", token, {
+                    httpOnly: false,
+                    secure:true, // Ensure the cookie is only accessible via HTTP requests
+                    sameSite: "None", // For cross-origin requests
+                    maxAge: 24 * 60 * 60 * 1000, // 1 day in milliseconds
                 });
-                res.json({message:`Welcome ${expectedUser.name}`,isLogged:true});
+
+                // Send response
+                res.json({ message: `Welcome ${expectedUser.name}`, isLogged: true });
+            } else {
+                throw new Error("Wrong password");
             }
-            else{
-                throw new Error("wrong password");
-            }
-        }
-        else{
+        } else {
             throw new Error("No user detected");
         }
-    }
-    catch(e){
-        res.json({message:  e.message,isLogged:false});
+    } catch (e) {
+        res.json({ message: e.message, isLogged: false });
     }
 });
+
 
 const getSignup = expressAsyncHandler((async (req,res)=>{
     

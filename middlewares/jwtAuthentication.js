@@ -1,5 +1,4 @@
 import jwt from 'jsonwebtoken';
-import cookieParser from 'cookie-parser';
 const jwtAuth = (req,res,next)=>{
     try{
     let token = req.cookies?.token;
