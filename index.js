@@ -8,8 +8,9 @@ import cloudRouter from "./Routes/uploadRoutes.js";
 import profileRouter from "./Routes/profileRoutes.js";
 dotenv.config();
 const app = express();
+const URL = process.env.URL;
 app.use(cookieParser());
-app.use(cors({origin: `${process.env.URL}`, // Frontend URL
+app.use(cors({origin: `${URL}`, // Frontend URL
     credentials: true}));
 app.use(express.json());
 mongose();
