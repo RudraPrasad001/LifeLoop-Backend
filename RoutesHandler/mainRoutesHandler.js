@@ -59,42 +59,37 @@ const getUsers = expressAsyncHandler(async(req,res)=>{
 const postLogin = expressAsyncHandler(async (req, res) => {
     let { userEmail, password } = req.body;
     try {
-        if (userEmail.length === 0 || password.length === 0) {
-            throw new Error("Fill the fields");
-        }
-
-        const expectedUser = await User.findOne({ email: userEmail }).lean();
-
-        if (expectedUser) {
-            let result = await bcrypt.compare(password, expectedUser.password);
-            if (result === true) {
-                const expectedUserObj = expectedUser;
-                console.log(expectedUserObj);
-
-                // Create the JWT token
-                const token = jwt.sign(expectedUserObj, process.env.SECRET_KEY, { expiresIn: '1h' });
-                console.log(token);
-
-                // Set cookie with proper configurations
-                res.cookie("token", token, {
-                    httpOnly: false,
-                    secure:true, // Ensure the cookie is only accessible via HTTP requests
-                    sameSite: "None", // For cross-origin requests
-                    maxAge: 24 * 60 * 60 * 1000, // 1 day in milliseconds
-                });
-
-                // Send response
-                res.json({ message: `Welcome ${expectedUser.name}`, isLogged: true });
-            } else {
-                throw new Error("Wrong password");
-            }
-        } else {
-            throw new Error("No user detected");
-        }
+      if (!userEmail || !password) {
+        throw new Error("Fill the fields");
+      }
+  
+      const expectedUser = await User.findOne({ email: userEmail }).lean();
+  
+      if (!expectedUser) {
+        throw new Error("No user detected");
+      }
+  
+      const result = await bcrypt.compare(password, expectedUser.password);
+      if (!result) {
+        throw new Error("Wrong password");
+      }
+  
+      const token = jwt.sign(expectedUser, process.env.SECRET_KEY, {
+        expiresIn: '1h',
+      });
+  
+      // ✅ Return token in response instead of setting a cookie
+      res.json({
+        message: `Welcome ${expectedUser.name}`,
+        isLogged: true,
+        token, // send token in JSON
+      });
+  
     } catch (e) {
-        res.json({ message: e.message, isLogged: false });
+      res.json({ message: e.message, isLogged: false });
     }
-});
+  });
+  
 
 
 const getSignup = expressAsyncHandler((async (req,res)=>{
