@@ -10,7 +10,7 @@ dotenv.config();
 const app = express();
 const URL = process.env.URL;
 app.use(cookieParser());
-app.use(cors({// Frontend URL
+app.use(cors({origin:process.env.URL, // Frontend URL
     credentials: true}));
 app.use(express.json());
 mongose();
