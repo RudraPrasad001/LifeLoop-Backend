@@ -21,8 +21,6 @@ app.use(cors({
 }));
 
 app.use(cookieParser());
-app.use(cors({origin:process.env.URL, // Frontend URL
-    credentials: true}));
 app.use(express.json());
 mongose();
 app.use('/app',router);
