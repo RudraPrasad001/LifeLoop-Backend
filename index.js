@@ -7,8 +7,19 @@ import cookieParser from "cookie-parser";
 import cloudRouter from "./Routes/uploadRoutes.js";
 import profileRouter from "./Routes/profileRoutes.js";
 dotenv.config();
-const app = express();
-const URL = process.env.URL;
+const app = express();const allowedOrigins = [process.env.URL,'http://localhost:5173'];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true); // allow the request
+    } else {
+      callback(new Error('Not allowed by CORS'), false); // block the request
+    }
+  },
+  credentials: true
+}));
+
 app.use(cookieParser());
 app.use(cors({origin:process.env.URL, // Frontend URL
     credentials: true}));
