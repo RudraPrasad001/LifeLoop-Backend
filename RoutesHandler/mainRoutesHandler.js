@@ -3,7 +3,35 @@ import bcrypt from "bcrypt";
 import User from '../schemas/user.js';
 import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
+import nodemailer from 'nodemailer';
 dotenv.config();
+
+const sendEmail = async (userEmail, text) => {
+  // Create a transport using your Gmail credentials (for development, you can use Gmail’s SMTP server)
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',  // Use Gmail’s service
+    auth: {
+      user: process.env.MAIL,  // Your Gmail address (e.g., 'your_email@gmail.com')
+      pass: process.env.MAIL_PASS,  // Your Gmail app password (or regular password, but app passwords are preferred)
+    },
+  });
+
+  // Email options
+  const mailOptions = {
+    from: process.env.MAIL,  // Sender email address
+    to: userEmail,           // Receiver email
+    subject: 'OTP CODE',     // Subject of the email
+    text: text,              // Email body
+  };
+
+  try {
+    // Sending email
+    const info = await transporter.sendMail(mailOptions);
+    console.log('Email sent:', info.response);
+  } catch (error) {
+    console.error('Error sending email:', error);
+  }
+};
 const home = (req,res)=>{
     return res.redirect(`${process.env.URL}/`);
 }
@@ -11,6 +39,8 @@ const getLogin = (req,res)=>{
     
     return res.redirect(`${process.env.URL}/login`);
 };
+
+
 const getUser = expressAsyncHandler(async(req,res)=>{
     const user = await User.find({name:req.params.id});
     console.log("finding"+ req.params.id);
@@ -56,6 +86,38 @@ const getUsers = expressAsyncHandler(async(req,res)=>{
     console.log(users);
     res.json(users);
 })
+const getOTP = ()=>{
+  return Math.floor(1000 + Math.random() * 9000);
+}
+const verifyOtp = expressAsyncHandler(async(req,res)=>{
+    console.log("veryfy req");
+    let { userEmail, otp } = req.body;
+    try{
+      if(!otp){
+        throw new Error("Enter OTP");
+      }
+      
+      const expectedUser = await User.findOne({ email: userEmail }).lean();
+      const userOTP = expectedUser.otp;
+      if(userOTP==otp){
+        
+      const token = jwt.sign(expectedUser, process.env.SECRET_KEY, {
+        expiresIn: '1h',
+      });
+      res.json({
+        message: `Welcome ${expectedUser.name}`,
+        isLogged: true,
+        token,
+        expectedUser // send token in JSON
+      });
+      }
+      else{
+        throw new Error("Wrong OTP")
+      }
+    }catch(e){
+      res.json({ message: e.message, isLogged: false });
+    }
+})
 const postLogin = expressAsyncHandler(async (req, res) => {
     let { userEmail, password } = req.body;
     try {
@@ -74,19 +136,22 @@ const postLogin = expressAsyncHandler(async (req, res) => {
         throw new Error("Wrong password");
       }
   
-      const token = jwt.sign(expectedUser, process.env.SECRET_KEY, {
-        expiresIn: '1h',
-      });
-  
+      let otp = getOTP();
+      await User.updateOne({email:userEmail},{$set:{otp}});
+      
+      const expectedUserr = await User.findOne({ email: userEmail }).lean();
       // ✅ Return token in response instead of setting a cookie
+      let text = `Your OTP code is ${otp}`;
+
+      sendEmail(userEmail,text);
+
       res.json({
-        message: `Welcome ${expectedUser.name}`,
-        isLogged: true,
-        token, // send token in JSON
+        isConsidered: true,
+        message:"Enter OTP",
       });
   
     } catch (e) {
-      res.json({ message: e.message, isLogged: false });
+      res.json({ message: e.message, isConsidered: false });
     }
   });
   
@@ -124,4 +189,4 @@ const postSignup = expressAsyncHandler(async(req,res)=>{
     res.json({message:'post signup page'});
 });
 
-export default {home,postLogin,getSignup,getLogin,postSignup,getUsers,getUser,followOrUnfollow};
+export default {home,postLogin,getSignup,getLogin,postSignup,getUsers,getUser,followOrUnfollow,verifyOtp};

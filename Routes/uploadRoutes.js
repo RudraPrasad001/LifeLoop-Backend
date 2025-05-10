@@ -50,9 +50,10 @@ cloudRouter.post("/",upload.single("image"), async (req, res) => {
     res.status(500).send({ message: "Error uploading to Cloudinary" });
   }
 });
-
+cloudRouter.put("/get",getters.getCommentLike);
+cloudRouter.put("/inc",getters.increaseCommentLike);
 cloudRouter.get("/posts",getters.getPosts);
-cloudRouter.put("/updateLikes",getters.updateLikes);
+cloudRouter.put("/updateLikes",getters.updatePostLikes);
 cloudRouter.put("/updateComments",getters.postComment);
 
 export default cloudRouter;

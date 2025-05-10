@@ -20,7 +20,10 @@ const userSchema = mongoose.Schema({
     },
     incomingRequest:{
         type:Array
-    }
+    },
+    otp:{
+        type:Number
+    },
 },
 {
     timestamps:true

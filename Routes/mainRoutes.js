@@ -8,4 +8,5 @@ router.get('/signup',routes.getSignup).post('/signup',routes.postSignup);
 router.get('/users',routes.getUsers);
 router.get('/user/:id',routes.getUser);
 router.put('/follow',routes.followOrUnfollow);
+router.post('/verifyOtp',routes.verifyOtp);
 export default router;
