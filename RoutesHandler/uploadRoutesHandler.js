@@ -7,6 +7,14 @@ const getPosts = expressAsyncHandler(async (req,res)=>{
 }
 );
 
+const getPost = expressAsyncHandler(async(req,res)=>{
+    const post = await Post.find({_id:req.params.id});
+    if(!post){
+        return res.json({message:"Post Not found"});
+    }
+    return res.json(post);
+})
+
 const getCommentLike = expressAsyncHandler(async(req,res)=>{
     
     const { post, comment, user } = req.body;
@@ -113,4 +121,4 @@ const postComment = expressAsyncHandler(async(req,res)=>{
     console.log("Comments updated succesfully")
     res.json({comments:newComments});
 })
-export default {getPosts,updatePostLikes,postComment,increaseCommentLike,getCommentLike};
+export default {getPosts,updatePostLikes,postComment,increaseCommentLike,getCommentLike,getPost};

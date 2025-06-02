@@ -23,6 +23,7 @@ app.use(cors({
 app.use(cookieParser());
 app.use(express.json());
 mongose();
+
 app.use('/app',router);
 app.use('/upload',cloudRouter);
 app.use('/profile',profileRouter);
