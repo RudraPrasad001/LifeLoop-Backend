@@ -29,7 +29,7 @@ const getCommentLike = expressAsyncHandler(async(req,res)=>{
     if (!trueComment) {
         return res.status(404).json({ message: "Comment not found" });
     }
-    res.json({likes:trueComment.likes.length});
+    res.json({likes:trueComment.likes});
 })
 
 const increaseCommentLike = expressAsyncHandler(async (req, res) => {
@@ -65,7 +65,7 @@ const increaseCommentLike = expressAsyncHandler(async (req, res) => {
     await foundPost.save();
 
     // Return the updated comment
-    res.json({likes:trueComment.likes.length});
+    res.json({likes:trueComment.likes});
 });
 
 
