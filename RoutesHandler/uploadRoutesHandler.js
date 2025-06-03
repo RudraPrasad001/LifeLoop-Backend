@@ -7,6 +7,14 @@ const getPosts = expressAsyncHandler(async (req,res)=>{
 }
 );
 
+const getPost = expressAsyncHandler(async(req,res)=>{
+    const post = await Post.find({_id:req.params.id});
+    if(!post){
+        return res.json({message:"Post Not found"});
+    }
+    return res.json(post);
+})
+
 const getCommentLike = expressAsyncHandler(async(req,res)=>{
     
     const { post, comment, user } = req.body;
@@ -21,7 +29,7 @@ const getCommentLike = expressAsyncHandler(async(req,res)=>{
     if (!trueComment) {
         return res.status(404).json({ message: "Comment not found" });
     }
-    res.json({likes:trueComment.likes.length});
+    res.json({likes:trueComment.likes});
 })
 
 const increaseCommentLike = expressAsyncHandler(async (req, res) => {
@@ -57,7 +65,7 @@ const increaseCommentLike = expressAsyncHandler(async (req, res) => {
     await foundPost.save();
 
     // Return the updated comment
-    res.json({likes:trueComment.likes.length});
+    res.json({likes:trueComment.likes});
 });
 
 
@@ -113,4 +121,4 @@ const postComment = expressAsyncHandler(async(req,res)=>{
     console.log("Comments updated succesfully")
     res.json({comments:newComments});
 })
-export default {getPosts,updatePostLikes,postComment,increaseCommentLike,getCommentLike};
+export default {getPosts,updatePostLikes,postComment,increaseCommentLike,getCommentLike,getPost};

@@ -55,6 +55,7 @@ cloudRouter.put("/inc",getters.increaseCommentLike);
 cloudRouter.get("/posts",getters.getPosts);
 cloudRouter.put("/updateLikes",getters.updatePostLikes);
 cloudRouter.put("/updateComments",getters.postComment);
+cloudRouter.get("/post/:id",getters.getPost);
 
 export default cloudRouter;
 
