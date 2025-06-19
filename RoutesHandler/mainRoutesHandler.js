@@ -79,7 +79,19 @@ const getUser = expressAsyncHandler(async(req,res)=>{
     }
   });
   
+const getFollowers = expressAsyncHandler(async (req, res) => {
+  const username = req.params.id;
 
+  const user = await User.findOne({ name: username }).lean();
+  if (!user) {
+    return res.status(404).json({ error: "User not found" });
+  }
+
+  res.json({
+    followerCount: user.followers.length,
+    followers: user.followers
+  });
+});
 
 const getUsers = expressAsyncHandler(async(req,res)=>{
     const users =await User.find({});
@@ -189,4 +201,4 @@ const postSignup = expressAsyncHandler(async(req,res)=>{
     res.json({message:'post signup page'});
 });
 
-export default {home,postLogin,getSignup,getLogin,postSignup,getUsers,getUser,followOrUnfollow,verifyOtp};
+export default {getFollowers,home,postLogin,getSignup,getLogin,postSignup,getUsers,getUser,followOrUnfollow,verifyOtp};
