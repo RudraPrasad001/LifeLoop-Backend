@@ -28,4 +28,5 @@ app.use('/app',router);
 app.use('/upload',cloudRouter);
 app.use('/profile',profileRouter);
 let PORT = process.env.PORT;
+setInterval(()=>console.log("Server Online"),6000);
 app.listen(PORT,()=>{console.log(`Server is running on ${PORT}`)});
